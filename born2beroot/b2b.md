@@ -83,7 +83,7 @@ Security-Enhanced Linus
   - Securityy context is applied from the SELinux policy DB.
   - Permission is then granted or denied.
 
-# SSH
+# SSH 
 
 SSH is a software package that enables secure system administration and file transfers over insecure networks
 
