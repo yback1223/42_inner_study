@@ -1,0 +1,45 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/yback/Desktop/42inner/study/libft/codes'
+cc    -c -o ft_atoi.o ft_atoi.c
+ 
+cc    -c -o ft_bzero.o ft_bzero.c
+cc    -c -o ft_calloc.o ft_calloc.c
+cc    -c -o ft_isalnum.o ft_isalnum.c
+cc    -c -o ft_itoa.o ft_itoa.c
+cc    -c -o ft_isalpha.o ft_isalpha.c
+cc    -c -o ft_isascii.o ft_isascii.c
+ 
+cc    -c -o ft_isdigit.o ft_isdigit.c
+cc    -c -o ft_isprint.o ft_isprint.c
+cc    -c -o ft_memchr.o ft_memchr.c
+cc    -c -o ft_memcmp.o ft_memcmp.c
+cc    -c -o ft_memcpy.o ft_memcpy.c
+cc    -c -o ft_memmove.o ft_memmove.c
+cc    -c -o ft_memset.o ft_memset.c
+cc    -c -o ft_split.o ft_split.c
+cc    -c -o ft_strchr.o ft_strchr.c
+cc    -c -o ft_strdup.o ft_strdup.c
+ 
+cc    -c -o ft_striteri.o ft_striteri.c
+cc    -c -o ft_strlcat.o ft_strlcat.c
+cc    -c -o ft_strlcpy.o ft_strlcpy.c
+cc    -c -o ft_strlen.o ft_strlen.c
+cc    -c -o ft_strncmp.o ft_strncmp.c
+cc    -c -o ft_strnstr.o ft_strnstr.c
+cc    -c -o ft_strrchr.o ft_strrchr.c
+ 
+cc    -c -o ft_strjoin.o ft_strjoin.c
+cc    -c -o ft_strtrim.o ft_strtrim.c
+cc    -c -o ft_strmapi.o ft_strmapi.c
+cc    -c -o ft_substr.o ft_substr.c
+cc    -c -o ft_tolower.o ft_tolower.c
+ 
+cc    -c -o ft_toupper.o ft_toupper.c
+cc    -c -o ft_putchar_fd.o ft_putchar_fd.c
+cc    -c -o ft_putstr_fd.o ft_putstr_fd.c
+cc    -c -o ft_putendl_fd.o ft_putendl_fd.c
+cc    -c -o ft_putnbr_fd.o ft_putnbr_fd.c
+gcc -Wall -Wextra -Werror -c ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_itoa.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c ft_split.c ft_strchr.c ft_strdup.c ft_striteri.c ft_strlcat.c ft_strlcpy.c ft_strlen.c ft_strncmp.c ft_strnstr.c ft_strrchr.c ft_strjoin.c ft_strtrim.c ft_strmapi.c ft_substr.c ft_tolower.c ft_toupper.c ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c -I./
+ar rc libft.a ft_atoi.o ft_bzero.o ft_calloc.o ft_isalnum.o ft_itoa.o ft_isalpha.o ft_isascii.o ft_isdigit.o ft_isprint.o ft_memchr.o ft_memcmp.o ft_memcpy.o ft_memmove.o ft_memset.o ft_split.o ft_strchr.o ft_strdup.o ft_striteri.o ft_strlcat.o ft_strlcpy.o ft_strlen.o ft_strncmp.o ft_strnstr.o ft_strrchr.o ft_strjoin.o ft_strtrim.o ft_strmapi.o ft_substr.o ft_tolower.o ft_toupper.o ft_putchar_fd.o ft_putstr_fd.o ft_putendl_fd.o ft_putnbr_fd.o
+make: Leaving directory `/Users/yback/Desktop/42inner/study/libft/codes'
+ 
