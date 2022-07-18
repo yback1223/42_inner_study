@@ -1,6 +1,4 @@
-- [](#)
-
-# 
+# Installation(Bonus including mandatory part)
 
 ![](img/2022-07-18-16-46-15.png)
 
