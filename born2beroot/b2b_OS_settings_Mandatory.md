@@ -496,3 +496,4 @@ $ sudo crontab -u root -e
 $ sudo crontab -u root -l
 ```
 - root 계정으로 설정된 crontab file을 볼 수 있게 해주는 명령어이다.
+>ref : https://linuxhint.com/crontab_in_linux/
