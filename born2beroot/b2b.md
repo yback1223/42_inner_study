@@ -1,8 +1,3 @@
-# 프로젝트 조건
-
-- X.org 설치 금지
-- 다른 그래픽 서버를 사용할 수 없다.
-
 # Apparmor
 
 - Apparmor is a Mandatory Access Control system which is a kernel enhancement to confine programs to a limited set of resources.
