@@ -424,7 +424,7 @@ uname -a
 printf "#CPU physical : "
 nproc --all
 
-printf "#vCPU : "
+printf "#vCPU: "
 cat /proc/cpuinfo | grep processor | wc -l
 
 printf "#Memory Usage: "
@@ -432,10 +432,13 @@ free -m | grep Mem | awk '{printf"%d/%dMB (%.2f%%)\n", $3, $2, $3/$2 * 100}'
 
 printf "#Disk Usage: "
 df -a -BM | grep /dev/map | awk '{sum+=$3}END{print sum}' | tr -d '\n'
+
 printf "/"
 df -a -BM | grep /dev/map | awk '{sum+=$4}END{print sum}' | tr -d '\n'
+
 printf "MB ("
 df -a -BM | grep /dev/map | awk '{sum1+=$3 ; sum2+=$4 }END{printf "%d", sum1 / sum2 * 100}' | tr -d '\n'
+
 printf "%%)\n"
 
 printf "#CPU load: "
@@ -445,7 +448,7 @@ printf "#Last boot: "
 who -b | awk '{printf $3" "$4"\n"}'
 
 printf "#LVM use: "
-if [ "$(lsblk | grep lvm | wc -l)" -gt 0 ] ; then printf "yes\n" ; else printf "no\n" ; fi
+if [ "$(lsblk | grep lvm | wc -l)" -gt 0 ]; then printf "yes\n"; else printf "no\n"; fi
 
 printf "#Connections TCP : "
 ss | grep -i tcp | wc -l | tr -d '\n'
@@ -482,7 +485,7 @@ $ sudo crontab -u root -e
 ```
 */10 * * * * sh /root/monitoring.sh | wall
 ```
-- *
+- `*`
   - 모든 때를 의미한다.
   - 위와 같이 m부분에만 `*/10`을 입력하면, 매일 매시간 command 부분이 실행될 것인데, 10분에 한 번씩 실행될 것이라는 의미이다.
   - 만약 1분에 한 번씩으로 변경하려면 `*/10`을 `*/1`로 변경만 해주면 된다.
