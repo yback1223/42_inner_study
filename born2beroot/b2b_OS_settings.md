@@ -11,6 +11,8 @@
 - [새로운 Group 생성](#새로운-group-생성)
 - [Monitoring.sh](#monitoringsh)
 - [Cron](#cron)
+- [제출 파일](#제출-파일)
+- [Bonus (곧 작성 예정)](#bonus-곧-작성-예정)
 
 ---
 
@@ -500,3 +502,422 @@ $ sudo crontab -u root -l
 ```
 - root 계정으로 설정된 crontab file을 볼 수 있게 해주는 명령어이다.
 >ref : https://linuxhint.com/crontab_in_linux/
+
+---
+
+# 제출 파일
+
+VM을 상태를 저장하여 종료시키면 snapshot이 자동 저장된다.
+- 맥의 터미널에서 VM의 경로로 들어가 snapshot을 확인해본다.
+
+VM의 설치폴더에 보면 `.vdi`파일이 있는데 이 파일로 제출해야 하는 txt파일을 생성할 것이다.
+
+```
+shasum <vm_name>.vdi -> signature.txt
+```
+- signature.txt 파일을 git push하여 제출한다.
+
+---
+
+# Bonus
+
+## Linux Lighttpd
+
+다음의 명령어로 lighttpd를 설치한다.
+- open source web server
+- 설치가 완료되면 자동적으로 실행된다.
+
+```
+$ sudo apt install lighttpd
+```
+
+- 수동으로 실행하고자 한다면 
+
+```
+$ sudo service lighttpd start
+```
+
+Lighttpd 설치과정의 마지막으로 ufw 명령어를 사용해서 80포트를 allow 해준다.
+- web server의 포트는 기본적으로 port 80을 사용한다.
+- web server는 web client를 80포트에서 기다린다.
+	- 추가적으로 다른 web server를 시범적으로 사용하고자 한다면 보통 8080포트를 사용한다.
+>ref : https://www.techtarget.com/searchnetworking/definition/port-80
+
+Lighttpd와 관련된 설정파일은 `etc/lighttpd/` 디렉토리에 존재한다.
+- 설정 파일의 이름은 lighttpd.conf
+
+lighttpd.conf
+```
+# snip
+server.document-root        = "/var/www/html"
+server.upload-dirs          = ( "/var/cache/lighttpd/uploads" )
+server.errorlog             = "/var/log/lighttpd/error.log"
+server.pid-file             = "/var/run/lighttpd.pid"
+server.username             = "www-data"
+server.groupname            = "www-data"
+server.port                 = 80
+# snip
+```
+- `/var/www/html` directory에 html 파일을 넣어놓고 localhost:80에 접속하면 그 html페이지를 확인해 볼수 있다.
+
+## Maria DB server
+
+과제에서 요구한 Maria DB를 설치한다.
+
+```
+$ sudo apt install mariadb-server
+```
+
+설치가 잘 되었는지 확인까지 한다.
+
+```
+$ dpkg -l | grep mariadb-server
+```
+
+이제 mysql_secure_installation을 설치한다.
+- Unix에서 사용할 수 있는 shell script이다.
+	- 다음의 기능을 제공하여 MariaDB 서버의 보안성을 높일 수 있다.
+		- root 계정의 비밀번호를 설정할 수 있다.
+		- local host외의 밖에서 접근하는 root 계정을 삭제할 수 있다.
+		- 익명의 user를 삭제할 수 있다.
+		- 익명의 user가 접근할 수 있는 test db를 삭제할 수 있다.
+
+```
+$ sudo mysql_secure_installation
+
+NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
+      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+
+In order to log into MariaDB to secure it, we'll need the current
+password for the root user.  If you've just installed MariaDB, and
+you haven't set the root password yet, the password will be blank,
+so you should just press enter here.
+
+
+Enter current password for root (enter for none): 
+OK, successfully used password, moving on...
+
+
+Setting the root password ensures that nobody can log into the MariaDB
+root user without the proper authorisation.
+
+
+You already have a root password set, so you can safely answer 'n'.
+
+
+Change the root password? [Y/n] n
+ ... skipping.
+
+
+By default, a MariaDB installation has an anonymous user, allowing anyone
+to log into MariaDB without having to have a user account created for
+them.  This is intended only for testing, and to make the installation
+go a bit smoother.  You should remove them before moving into a
+production environment.
+
+
+Remove anonymous users? [Y/n] y
+ ... Success!
+
+
+Normally, root should only be allowed to connect from 'localhost'.  This
+ensures that someone cannot guess at the root password from the network.
+
+
+Disallow root login remotely? [Y/n] y
+ ... Success!
+
+
+By default, MariaDB comes with a database named 'test' that anyone can
+access.  This is also intended only for testing, and should be removed
+before moving into a production environment.
+
+
+Remove test database and access to it? [Y/n] y
+ - Dropping test database...
+ ... Success!
+ - Removing privileges on test database...
+ ... Success!
+
+
+Reloading the privilege tables will ensure that all changes made so far
+will take effect immediately.
+
+
+Reload privilege tables now? [Y/n] y
+ ... Success!
+
+
+Cleaning up...
+
+
+All done!  If you've completed all of the above steps, your MariaDB
+installation should now be secure.
+
+
+Thanks for using MariaDB!
+```
+
+- 위와 똑같이 진행하면 된다.
+- 위의 과정은 앞에서 설명한 것과 같이 보안을 위한 삭제 과정이다.
+- 만약 중간에 잘못 입력했다면 Ctrl + c로 빠져나오면 된다.
+- 주의
+	- database root와 system root를 혼동해서는 안된다.
+	- 처음에 비밀번호를 요구하는데 그냥 테스트 과정이니 엔터키를 눌러서 넘어가도 괜찮다.
+
+이제 DB를 사용해보자.
+
+```
+$ sudo mariadb
+MariaDB [(none)]>
+```
+
+```
+MariaDB [(none)]> CREATE DATEBASE <database-name>;
+```
+- db를 생성하는 명령문이다. `<database-name`에는 아무 이름이나 입력해도 무관하다.
+
+db를 생성했으니 db에 대한 접근 권한을 부여해보자.
+
+```
+MariaDB [(none)]> GRANT ALL ON <database-name>.* TO '<username>'@'localhost' IDENTIFIED BY '<password>' WITH GRANT OPTION;
+```
+- 해당 db에 대한 모든 권한을 localhost의 username에게 알맞은 비밀번호를 입력했다는 전제 하에 부여하겠다는 명령어이다.
+	- 이 과정에서 나중에 mariadb 모드로 전환할 때 필요한 아이디와 비밀번호를 설정한다. 이 명령문에서 사용된 username과 password를 잊지말자.
+
+방금 GRANT 옵션을 사용해서 권한을 설정했으니 바로 이를 적용시키기 위해 다음의 명령어를 사용하자.
+
+```
+MariaDB [(none)]> FLUSH PRIVILEGES;
+```
+
+방금 생성한 db가 잘 작동되는지 확인
+
+```
+MariaDB [(none)]> SHOW DATABASES;
+```
+
+MariaDB 모드에서 일반 터미널로 나가려면
+
+```
+MariaDB [(none)]> exit
+```
+
+MariaDB 모드로 다시 들어가기 위해 `mariadb` 명령어를 치면 아이디와 비밀번호를 요구한다.
+
+접근하기 위해서 다음의 명령어를 사용한다.
+
+```
+$ mariadb -u <username> -p
+Enter password : <passowrd>
+MariaDB [(none)]>
+```
+- `-u`는 username을 의미하고 `-p`는 password를 의미한다.
+
+
+## PHP
+
+php-cgi와 php-mysql을 설치하자.
+- php-cgi
+	- web server와 CGI program 간의 정보 교환에 사용되는 protocol
+		- CGI program
+			- CGI protocol를 사용해서 data를 주고 받는 program이다.
+	- HTTP 요청이 있을 때, server-side script를 실행하는 하나의 방법을 의미한다.
+	- php script를 CGI application과 같이 실행시키는 것은 매우 비효율적이고, 요즘은 거의 사용되지 않는다.
+	- 쉽게 말해서 만약 PHP script를 CGI로 실행시킨다는 것은 웹 서버에 php 파일의 위치를 알려줘서 그 파일이 사용되는 웹 페이지에 접근할 때마다 그 php 파일을 실행시킨다는 의미이다.
+>ref : https://www.basezap.com/difference-php-cgi-php-fpm/
+
+- php-mysql
+	- 단순하게 PHP를 이용해서 database에 접속하고 이를 다룰 수 있게 만들어주는 명령어이다.
+>ref : https://www.w3schools.com/php/php_mysql_intro.asp
+
+```
+$ sudo apt install php-cgi php-mysql
+```
+
+잘 설치되었는지 확인해보자
+
+```
+$ dpkg -l | grep php
+```
+
+## Wordpress
+
+Wordpress를 설치하자
+- Content Management System(CMS)
+	- website를 만들 수 있게 도와주는 시스템
+- 많은 확장 플러그인들과 템플릿이 있다.
+- PHP로 만들어졌다.
+- MySQL 혹은 MariaDB와 연동할 수 있고, HTTPS 적용이 가능하다.
+>ref : https://en.wikipedia.org/wiki/WordPress
+
+wordpress를 설치하기 전에 이에 필요한 wget를 먼저 설치해야 한다.
+- wget
+	- Web get
+	- 웹 상의 파일을 다운로드 받을 때 사용하는 명령어
+	- HTTP, HTTPS, FTP 프로토콜 지원
+	- 속도 느리거나 불안정한 네트워크 환경에서도 매우 잘 작동한다.
+
+```
+$ sudo apt install wget
+```
+
+Wordpress의 최신 버전을 웹에서 다운로드 한다.
+
+```
+$ sudo wget http://wordpress.org/latest.tar.gz -P /var/www/html
+```
+- `-P` 옵션을 사용해서 다운로드 경로를 따로 설정해줬다.
+
+다운로드를 완료했다면 압축을 해제
+
+```
+$ sudo tar -xzvf /var/www/html/latest.tar.gz
+```
+
+압축 해제를 완료하면 압축파일은 필요 없으므로 삭제해주자.
+
+```
+$ sudo rm /var/www/html/latest.tar.gz
+```
+
+이제 압축을 해제한 파일들을 모두 `/var/www/html/wordpress`에서 `/var/www/html`로 옮긴 후에 삭제한다.
+
+```
+$ sudo cp -r /var/www/html/wordpress/* /var/www/html
+```
+
+```
+$ sudo rm -rf /var/www/html/wordpress
+```
+
+wordpress 환경 설정에 필요한 내용을 만들기 위해 wordpress에서 제공한 sample파일을 이용한다.
+
+```
+$ sudo cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+```
+- 그냥 이름만 바꿔서 사용하는 것이다.
+
+이 파일을 편집한다.
+
+```
+$ sudo visudo /var/www/html/wp-config.php
+```
+
+파일에 들어가면 설정을 다음의 설정을 변경해주자.
+
+```
+define( 'DB_NAME', 'database_name_here' );^M
+define( 'DB_USER', 'username_here' );^M
+define( 'DB_PASSWORD', 'password_here' );^M
+```
+- 아까 만들었던 db의 정보를 입력해주면 된다.
+
+
+```
+$ sudo lighty-enable-mod fastcgi
+$ sudo lighty-enable-mod fastcgi-php
+$ sudo service lighttpd force-reload
+```
+- 이제까지 configuration을 진행했으니 이 환경 설정들을 모두 적용시켜주는 명령어들이다.
+>ref : https://manpages.debian.org/jessie/lighttpd/lighty-enable-mod.1#:~:text=lighty%2Denable%2Dmod%20and%20lighty%2Ddisable%2Dmod%20are,interactively%20or%20from%20command%20line
+
+- 마지막 명령어로 lighttpd를 재시작시키자.
+
+## FTP (File Transfer Protocol)
+
+sFTP의 한 종류인 vsftpd를 설치하자.
+
+```
+$ sudo apt-get install vsftpd
+```
+
+확인
+
+```
+$ dpkg -l | grep vsftpd
+```
+
+FTP의 default 포트는 21이므로 ufw를 사용해서 이를 allow시키자.
+
+```
+$ sudo ufw allow 21
+```
+
+vsftpd의 환경설정
+
+```
+$ sudo visudo /etc/vsftpd.conf
+```
+
+vsftpd.conf 파일에서 다음의 구문의 주석처리를 없애서 기능을 활성하자.
+
+```
+#write_enable=YES
+
+write_enable=YES
+```
+
+FTP가 연결된 사용자를 위한 root 폴더가 필요하므로 이를 만들어준다.
+
+```
+$ sudo mkdir /home/<username>/ftp
+$ sudo mkdir /home/<username>/ftp/files
+$ sudo chown <username> /home/<username>/ftp
+$ sudo chmod a-w /home/<username>/ftp
+```
+- username은 현재 debian terminal에서의 user를 의미한다.
+- ftp를 통해서 주고 받은 파일들을 위한 root directory를 만들어주고 chown 명령어를 이용해서 소유자를 user로 지정해주자.
+- chmod a-w 명령어를 이용해서 해당 directory나 file에 대한 편집 권한을 모두 없애자.
+
+모두 만들었다면 이를 위한 환경설정을 vsftpd.conf에 추가시킨다.
+
+```
+user_sub_token=$USER
+local_root=/home/$USER/ftp
+```
+- 이를 vsftpd.conf에 추가시키자.(난 맨 밑에 추가시켰다.)
+- user_sub_token
+  - 이 옵션은 자동으로 각 유저에게 home directory를 생성해준다.
+- local_root
+	- 이 옵션은 각 유저의 home directory를 할당해주는 역할을 한다.
+
+vsftpd.conf 보안을 위해 다음 문구의 주석처리를 없앤다.
+
+```
+#chroot_local_user=YES
+
+chroot_local_user=YES
+```
+- chroot
+	- 사용자를 chroot 감옥에 가두는 것이라고 생각하면된다.
+	- 사용자는 home directory가 root directory가 되어 더 이상 home directory의 상위 폴더로는 이동할 수 없게 된다.
+		- home directory의 하위 폴더로만 접근 가능하게 만든 것이다.
+>ref : http://vsftpd.beasts.org/vsftpd_conf.html
+
+FTP를 통해서 특정 user만 로그인할 수 있게 하기 위해서 vsftpd.conf에 다음의 내용을 추가해야한다.
+
+```
+userlist_enable=YES
+userlist_file=/etc/vsftp.user_list
+userlist_deny=NO
+```
+- userlist_file의 위치를 등록해놨으니까 따로 etc directory에 user_list를 생성해줘야 한다.
+
+```
+$ sudo vi /etc/vsftpd.user_list
+```
+
+```
+$ echo <username> | sudo tee -a /etc/vsftpd.user_list
+```
+- username을 tee 명령어를 이용해서 해당 directory의 파일에 추가시켜주는 명령어
+- 이 명령어를 입력하고 vsftpd.user_list에 username이 잘 추가되었는지 확인한다.
+
+마지막으로 FTP를 실행하기 위해서는
+
+```
+$ ftp <ip-address>
+```
+- 과제에서는 127.0.0.1 local host ip를 사용하면 잘 작동되는 것을 확인할 수 있다.
